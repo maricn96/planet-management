@@ -11,4 +11,5 @@ public interface SatelliteRepository extends JpaRepository<Satellite, Long> {
 
     @Query(value = "SELECT s FROM Satellite s WHERE planet.id = :id")
     public List<Satellite> findAllByPlanetId(@RequestParam("id") Long id);
+
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +36,11 @@ public class PlanetServiceImpl implements PlanetService {
 
     @Override
     public Planet findById(Long id) {
-        return planetRepository.findById(id).get();
+        Optional<Planet> planet = planetRepository.findById(id);
+        if(!planet.isPresent())
+            return null;
+        else
+            return planet.get();
     }
 
     @Override
@@ -61,8 +66,9 @@ public class PlanetServiceImpl implements PlanetService {
     @Override
     public Planet oneWithSatellites(Long id) {
         List<Satellite> satellites = satelliteRepository.findAllByPlanetId(id);
-        Planet planet = planetRepository.findById(id).get();
-        if(planet != null) {
+        Optional<Planet> planetOptional = planetRepository.findById(id);
+        if(planetOptional.isPresent()) {
+            Planet planet = planetOptional.get();
             planet.setSatellites(satellites);
             return planet;
         } else {

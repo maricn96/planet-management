@@ -69,4 +69,9 @@ public class SatelliteServiceImpl implements SatelliteService {
     public void deleteById(Long id) {
         satelliteRepository.deleteById(id);
     }
+
+    @Override
+    public List<Satellite> findAllByPlanetId(Long id) {
+        return satelliteRepository.findAllByPlanetId(id);
+    }
 }

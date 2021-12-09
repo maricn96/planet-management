@@ -59,4 +59,10 @@ public class SatelliteController implements SatelliteApi {
         return new ResponseEntity<String>("DELETED", HttpStatus.OK);
     }
 
+    @GetMapping("/findAllByPlanetId/{id}")
+    public ResponseEntity<List<SatelliteDTO>> findAllByPlanetId(@PathVariable Long id) {
+        List<Satellite> retList = satelliteService.findAllByPlanetId(id);
+        return new ResponseEntity<List<SatelliteDTO>>(satelliteMapper.toListDTO(retList), HttpStatus.OK);
+    }
+
 }

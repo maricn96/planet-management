@@ -13,11 +13,19 @@ import javax.persistence.*;
 public class Satellite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(name = "surface_area", nullable = false)
     private Long surfaceArea;
+
+    @Column(nullable = false)
     private Long mass;
+
+    @Column(name = "natural_satellite")
     private Boolean naturalSatellite;
 
     @ManyToOne

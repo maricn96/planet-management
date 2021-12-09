@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -14,12 +15,22 @@ import java.util.List;
 public class Planet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(name = "surface_area", nullable = false)
     private Long surfaceArea;
+
+    @Column(nullable = false)
     private Long mass;
+
+    @Column(name = "distanceFromSun", nullable = false)
     private Long distanceFromSun;
+
+    @Column(name = "average_surface_temperature")
     private Integer averageSurfaceTemperature;
 
     @OneToMany(mappedBy = "planet")
