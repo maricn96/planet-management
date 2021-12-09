@@ -4,6 +4,7 @@ import com.mi.planetmanagement.dto.SatelliteDTO;
 import com.mi.planetmanagement.mapper.JpaContext;
 import com.mi.planetmanagement.mapper.PlanetMapper;
 import com.mi.planetmanagement.mapper.SatelliteMapper;
+import com.mi.planetmanagement.model.Planet;
 import com.mi.planetmanagement.model.Satellite;
 import com.mi.planetmanagement.repository.SatelliteRepository;
 import com.mi.planetmanagement.service.SatelliteService;
@@ -14,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Service
 public class SatelliteServiceImpl implements SatelliteService {
@@ -39,8 +41,32 @@ public class SatelliteServiceImpl implements SatelliteService {
 //    JpaContext jpaContext = new JpaContext(getEntityManager());
 
     @Override
-    public void save(SatelliteDTO dto) {
-        Satellite sat = satelliteMapper.toEntity(dto);
-        satelliteRepository.save(satelliteMapper.toEntity(dto));
+    public List<Satellite> findAll() {
+        return satelliteRepository.findAll();
+    }
+
+    @Override
+    public Satellite findById(Long id) {
+        return satelliteRepository.findById(id).get();
+    }
+
+    @Override
+    public void save(Satellite entity) {
+        satelliteRepository.save(entity);
+    }
+
+    @Override
+    public Satellite update(Long id, Satellite entity) {
+        if(satelliteRepository.findById(id).isPresent()) {
+            entity.setId(id);
+            return satelliteRepository.save(entity);
+        }
+        else
+            return null;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        satelliteRepository.deleteById(id);
     }
 }

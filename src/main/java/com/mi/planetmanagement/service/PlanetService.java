@@ -7,13 +7,19 @@ import java.util.List;
 
 public interface PlanetService {
 
-    List<PlanetDTO> findAll();
+    List<Planet> findAll();
 
-    PlanetDTO findById(Long id);
+    Planet findById(Long id);
 
-    PlanetDTO save(PlanetDTO dto);
+    void save(Planet entity);
 
-    PlanetDTO update(PlanetDTO dto);
+    Planet update(Long id, Planet entity);
 
-    PlanetDTO delete(Long id);
+    void deleteById(Long id);
+
+    Planet oneWithSatellites(Long id);
+
+    List<Planet> findAllFilteredByName(Integer perPage, Integer pageNumber, String filterPlanetName);
+
+    List<Planet> findAllSortedBySatellites(Integer perPage, Integer pageNumber, String direction);
 }

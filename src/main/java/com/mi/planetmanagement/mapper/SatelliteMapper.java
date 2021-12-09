@@ -9,14 +9,18 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = {PlanetMapper.class})
 public interface SatelliteMapper {
 
     SatelliteMapper INSTANCE = Mappers.getMapper(SatelliteMapper.class);
 
     @Mapping(target = "planetId", source = "planet.id")
-    SatelliteDTO toDto(Satellite satellite);
+    SatelliteDTO toDTO(Satellite satellite);
 
     @Mapping(target = "planet.id", source = "planetId")
     Satellite toEntity(SatelliteDTO satelliteDTO);
+
+    List<SatelliteDTO> toListDTO(List<Satellite> retList);
 }

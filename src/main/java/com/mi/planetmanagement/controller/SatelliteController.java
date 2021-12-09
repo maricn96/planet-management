@@ -3,16 +3,18 @@ package com.mi.planetmanagement.controller;
 import com.mi.planetmanagement.api.SatelliteApi;
 import com.mi.planetmanagement.dto.PlanetDTO;
 import com.mi.planetmanagement.dto.SatelliteDTO;
+import com.mi.planetmanagement.exceptions.NoRecordFoundException;
+import com.mi.planetmanagement.mapper.SatelliteMapper;
+import com.mi.planetmanagement.model.Planet;
 import com.mi.planetmanagement.model.Satellite;
 import com.mi.planetmanagement.service.PlanetService;
 import com.mi.planetmanagement.service.SatelliteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/satellite")
@@ -21,9 +23,40 @@ public class SatelliteController implements SatelliteApi {
     @Autowired
     private SatelliteService satelliteService;
 
+    @Autowired
+    private SatelliteMapper satelliteMapper;
+
+    @GetMapping
+    public ResponseEntity<List<SatelliteDTO>> findAll() {
+        List<Satellite> retList = satelliteService.findAll();
+        return new ResponseEntity<List<SatelliteDTO>>(satelliteMapper.toListDTO(retList), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SatelliteDTO> findById(@PathVariable Long id) {
+        Satellite ret = satelliteService.findById(id);
+        return new ResponseEntity<SatelliteDTO>(satelliteMapper.toDTO(ret), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<String> save(@RequestBody SatelliteDTO dto) {
-        satelliteService.save(dto);
-        return new ResponseEntity<String>("CREATED", HttpStatus.CREATED);
+        satelliteService.save(satelliteMapper.toEntity(dto));
+        return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SatelliteDTO> update(@PathVariable Long id, @RequestBody SatelliteDTO dto) {
+        Satellite ret = satelliteService.update(id, satelliteMapper.toEntity(dto));
+        if(ret == null)
+            throw new NoRecordFoundException("No record with id " + id + " found!");
+        else
+            return new ResponseEntity<SatelliteDTO>(satelliteMapper.toDTO(ret), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        satelliteService.deleteById(id);
+        return new ResponseEntity<String>("DELETED", HttpStatus.OK);
+    }
+
 }
