@@ -1,6 +1,5 @@
 package com.mi.planetmanagement.service;
 
-import com.mi.planetmanagement.dto.PlanetDTO;
 import com.mi.planetmanagement.model.Planet;
 
 import java.util.List;
@@ -16,8 +15,6 @@ public interface PlanetService {
     Planet update(Long id, Planet entity);
 
     void deleteById(Long id);
-
-    Planet oneWithSatellites(Long id);
 
     List<Planet> findAllFilteredByName(Integer perPage, Integer pageNumber, String filterPlanetName);
 

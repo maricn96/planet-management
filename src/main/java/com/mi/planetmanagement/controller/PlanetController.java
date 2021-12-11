@@ -1,8 +1,8 @@
 package com.mi.planetmanagement.controller;
 
-import com.mi.planetmanagement.api.PlanetApi;
 import com.mi.planetmanagement.dto.PlanetDTO;
-import com.mi.planetmanagement.exceptions.NoRecordFoundException;
+import com.mi.planetmanagement.dto.PlanetPageFilterRequestDTO;
+import com.mi.planetmanagement.dto.PlanetPageSortRequestDTO;
 import com.mi.planetmanagement.mapper.PlanetMapper;
 import com.mi.planetmanagement.model.Planet;
 import com.mi.planetmanagement.service.PlanetService;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/planet")
-public class PlanetController implements PlanetApi {
+public class PlanetController {
 
     @Autowired
     private PlanetService planetService;
@@ -44,10 +44,10 @@ public class PlanetController implements PlanetApi {
     @PutMapping("/{id}")
     public ResponseEntity<PlanetDTO> update(@PathVariable Long id, @RequestBody PlanetDTO dto) {
         Planet ret = planetService.update(id, planetMapper.toEntity(dto));
-        if(ret == null)
-            throw new NoRecordFoundException("No record with id " + id + " found!");
-        else
-            return new ResponseEntity<PlanetDTO>(planetMapper.toDTO(ret), HttpStatus.OK);
+//        if(ret == null)
+//            throw new PlanetNotFoundException("No planet with id " + id + " found!");
+//        else
+        return new ResponseEntity<PlanetDTO>(planetMapper.toDTO(ret), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -56,21 +56,15 @@ public class PlanetController implements PlanetApi {
         return new ResponseEntity<String>("DELETED", HttpStatus.OK);
     }
 
-    @GetMapping("/oneWithSatellites/{id}")
-    public ResponseEntity<PlanetDTO> oneWithSatellites(@PathVariable Long id) {
-        Planet planet = planetService.oneWithSatellites(id);
-        return new ResponseEntity<PlanetDTO>(planetMapper.toDTO(planet), HttpStatus.OK);
-    }
-
-    @GetMapping("/findAllFilteredByName/{perPage}/{pageNumber}")
-    public ResponseEntity<List<PlanetDTO>> findAllFilteredByName(@PathVariable Integer perPage, @PathVariable Integer pageNumber, @RequestParam String filterPlanetName) {
-        List<Planet> retList = planetService.findAllFilteredByName(perPage, pageNumber, filterPlanetName);
+    @PostMapping("/findAllFilteredByName")
+    public ResponseEntity<List<PlanetDTO>> findAllFilteredByName(@RequestBody PlanetPageFilterRequestDTO dto) {
+        List<Planet> retList = planetService.findAllFilteredByName(dto.getPagingRequestDTO().getPerPage(), dto.getPagingRequestDTO().getPageNumber(), dto.getFilterPlanetName());
         return new ResponseEntity<List<PlanetDTO>>(planetMapper.toListDTO(retList), HttpStatus.OK);
     }
 
-    @GetMapping("/findAllSortedBySatellites/{perPage}/{pageNumber}/{direction}")
-    public ResponseEntity<List<PlanetDTO>> findAllSortedBySatellites(@PathVariable Integer perPage, @PathVariable Integer pageNumber, @PathVariable String direction) {
-        List<Planet> retList = planetService.findAllSortedBySatellites(perPage, pageNumber, direction);
+    @PostMapping("/findAllSortedBySatellites")
+    public ResponseEntity<List<PlanetDTO>> findAllSortedBySatellites(@RequestBody PlanetPageSortRequestDTO dto) {
+        List<Planet> retList = planetService.findAllSortedBySatellites(dto.getPagingRequestDTO().getPerPage(), dto.getPagingRequestDTO().getPageNumber(), dto.getDirection());
         return new ResponseEntity<List<PlanetDTO>>(planetMapper.toListDTO(retList), HttpStatus.OK);
     }
 

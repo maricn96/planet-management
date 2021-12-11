@@ -1,13 +1,9 @@
 package com.mi.planetmanagement.controller;
 
-import com.mi.planetmanagement.api.SatelliteApi;
-import com.mi.planetmanagement.dto.PlanetDTO;
 import com.mi.planetmanagement.dto.SatelliteDTO;
-import com.mi.planetmanagement.exceptions.NoRecordFoundException;
+import com.mi.planetmanagement.exceptions.SatelliteNotFoundException;
 import com.mi.planetmanagement.mapper.SatelliteMapper;
-import com.mi.planetmanagement.model.Planet;
 import com.mi.planetmanagement.model.Satellite;
-import com.mi.planetmanagement.service.PlanetService;
 import com.mi.planetmanagement.service.SatelliteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/satellite")
-public class SatelliteController implements SatelliteApi {
+public class SatelliteController {
 
     @Autowired
     private SatelliteService satelliteService;
@@ -48,7 +44,7 @@ public class SatelliteController implements SatelliteApi {
     public ResponseEntity<SatelliteDTO> update(@PathVariable Long id, @RequestBody SatelliteDTO dto) {
         Satellite ret = satelliteService.update(id, satelliteMapper.toEntity(dto));
         if(ret == null)
-            throw new NoRecordFoundException("No record with id " + id + " found!");
+            throw new SatelliteNotFoundException("No satellite with id " + id + " found!");
         else
             return new ResponseEntity<SatelliteDTO>(satelliteMapper.toDTO(ret), HttpStatus.OK);
     }

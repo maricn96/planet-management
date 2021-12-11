@@ -8,19 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 
 public interface PlanetRepository extends JpaRepository<Planet, Long> {
 
     @Query(value = "SELECT p FROM Planet p WHERE p.name = :filteredPlanetName")
-    Page<Planet> findAllFiltered(Pageable pageable, @Param("filteredPlanetName") String filteredPlanetName);
+    Page<Planet> findAllFilteredByName(Pageable pageable, @Param("filteredPlanetName") String filteredPlanetName);
 
-//    @Query(value = "SELECT new com.mi.planetmanagement.dto.PlanetsSortedBySatDTO(count(s) AS satellitesCount, p) FROM Planet p JOIN Satellite s ON p.id = s.planet.id GROUP BY p")
-//    Page<PlanetsSortedBySatDTO> findAllSortedBySatelliteNumber(Pageable pageable);
-
-    @Query(value = "SELECT new com.mi.planetmanagement.dto.PlanetsSortedBySatDTO(count(s) as satellitesNumber, p) FROM Planet p JOIN p.satellites s GROUP BY p") //FROM Planet p JOIN Satellite s ON p.id = s.planet.id GROUP BY p
+    @Query(value = "SELECT new com.mi.planetmanagement.dto.PlanetsSortedBySatDTO(count(s.id) as satellitesNumber, p) FROM Planet p LEFT JOIN Satellite s ON p.id = s.planet.id GROUP BY p")
     Page<PlanetsSortedBySatDTO> findAllSortedBySatelliteNumber(Pageable pageable);
-
-//    @Query(value = "SELECT p FROM Planet p JOIN p.satellites s GROUP BY p") //FROM Planet p JOIN Satellite s ON p.id = s.planet.id GROUP BY p
-//    Page<Planet> findAllSortedBySatelliteNumber(Pageable pageable);
 
 }

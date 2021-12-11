@@ -1,9 +1,8 @@
 package com.mi.planetmanagement.service.impl;
 
-import com.mi.planetmanagement.dto.PlanetDTO;
 import com.mi.planetmanagement.dto.PlanetsSortedBySatDTO;
+import com.mi.planetmanagement.exceptions.PlanetNotFoundException;
 import com.mi.planetmanagement.model.Planet;
-import com.mi.planetmanagement.model.Satellite;
 import com.mi.planetmanagement.repository.PlanetRepository;
 import com.mi.planetmanagement.repository.SatelliteRepository;
 import com.mi.planetmanagement.service.PlanetService;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PlanetServiceImpl implements PlanetService {
@@ -28,6 +26,8 @@ public class PlanetServiceImpl implements PlanetService {
     @Autowired
     private SatelliteRepository satelliteRepository;
 
+    private final String exceptionMessage = "Could not find planet with id: ";
+
 
     @Override
     public List<Planet> findAll() {
@@ -37,10 +37,7 @@ public class PlanetServiceImpl implements PlanetService {
     @Override
     public Planet findById(Long id) {
         Optional<Planet> planet = planetRepository.findById(id);
-        if(!planet.isPresent())
-            return null;
-        else
-            return planet.get();
+        return planet.orElseThrow(() -> new PlanetNotFoundException(exceptionMessage + id));
     }
 
     @Override
@@ -50,36 +47,25 @@ public class PlanetServiceImpl implements PlanetService {
 
     @Override
     public Planet update(Long id, Planet entity) {
-        if(planetRepository.findById(id).isPresent()) {
+
+        if(!planetRepository.findById(id).isPresent())
+            throw new PlanetNotFoundException(exceptionMessage + id);
+        else {
             entity.setId(id);
             return planetRepository.save(entity);
         }
-        else
-            return null;
     }
 
     @Override
     public void deleteById(Long id) {
+        planetRepository.findById(id).orElseThrow(() -> new PlanetNotFoundException(exceptionMessage + id));
         planetRepository.deleteById(id);
-    }
-
-    @Override
-    public Planet oneWithSatellites(Long id) {
-        List<Satellite> satellites = satelliteRepository.findAllByPlanetId(id);
-        Optional<Planet> planetOptional = planetRepository.findById(id);
-        if(planetOptional.isPresent()) {
-            Planet planet = planetOptional.get();
-            planet.setSatellites(satellites);
-            return planet;
-        } else {
-            return null;
-        }
     }
 
     @Override
     public List<Planet> findAllFilteredByName(Integer perPage, Integer pageNumber, String filterPlanetName) {
         Pageable pageable = PageRequest.of(pageNumber, perPage);
-        Page<Planet> planets = planetRepository.findAllFiltered(pageable, filterPlanetName);
+        Page<Planet> planets = planetRepository.findAllFilteredByName(pageable, filterPlanetName);
         return planets.getContent();
     }
 
@@ -87,26 +73,12 @@ public class PlanetServiceImpl implements PlanetService {
     public List<Planet> findAllSortedBySatellites(Integer perPage, Integer pageNumber, String direction) {
         Pageable pageable = PageRequest.of(pageNumber, perPage, direction.equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, "satellitesNumber");
         Page<PlanetsSortedBySatDTO> planets = planetRepository.findAllSortedBySatelliteNumber(pageable);
-        List<Planet> planetsWithSatellites = new ArrayList<>();
-        List<Planet> allPlanets = planetRepository.findAll();
-        List<Planet> finalSortered = new ArrayList<>();
-        for(PlanetsSortedBySatDTO dto : planets) {
-            planetsWithSatellites.add(dto.getPlanetDTO());
-        }
-
-        List<Planet> planetsWithoutSatellites = allPlanets
-                .stream()
-                .filter(planet ->
-                    planet.getSatellites().size() == 0
-                ).collect(Collectors.toList());
-
-        if(direction.equals("ASC")) {
-            finalSortered.addAll(planetsWithoutSatellites);
-            finalSortered.addAll(planetsWithSatellites);
-        } else {
-            finalSortered.addAll(planetsWithSatellites);
-            finalSortered.addAll(planetsWithoutSatellites);
-        }
-        return finalSortered;
+        List<Planet> retVal = new ArrayList<>();
+        planets.stream()
+                .forEach(planet -> {
+                    retVal.add(planet.getPlanet());
+                });
+        return retVal;
     }
+
 }

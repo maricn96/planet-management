@@ -1,6 +1,5 @@
 package com.mi.planetmanagement.service;
 
-import com.mi.planetmanagement.dto.SatelliteDTO;
 import com.mi.planetmanagement.model.Satellite;
 
 import java.util.List;
