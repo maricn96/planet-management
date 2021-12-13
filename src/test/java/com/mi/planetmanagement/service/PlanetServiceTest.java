@@ -15,6 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -96,24 +97,26 @@ public class PlanetServiceTest {
         planetsSortedBySatDTOList = new ArrayList<>();
         planetsSortedBySatDTOList.add(planetsSortedBySatDTO);
         planetsSortedBySatDTOPage = new PageImpl<PlanetsSortedBySatDTO>(planetsSortedBySatDTOList);
-
     }
 
     @Test
     public void testFindAllSuccess() {
         when(planetRepository.findAll()).thenReturn(planets);
+
         List<Planet> response = planetService.findAll();
 
-        assertEquals(planets, planetService.findAll());
-
-        verify(planetRepository, times(2)).findAll();
+        assertEquals(planets, response);
+        verify(planetRepository, times(1)).findAll();
         verifyNoMoreInteractions(planetRepository);
     }
 
     @Test
     public void testFindAllNotFound() {
         when(planetRepository.findAll()).thenReturn(null);
-        assertEquals(null, planetService.findAll());
+
+        List<Planet> response = planetService.findAll();
+
+        assertEquals(null, response);
 
         verify(planetRepository, times(1)).findAll();
         verifyNoMoreInteractions(planetRepository);
@@ -122,8 +125,10 @@ public class PlanetServiceTest {
     @Test
     public void testFindByIdSuccess() {
         when(planetRepository.findById(existsId)).thenReturn(Optional.of(planet));
-        assertEquals(planet, planetService.findById(existsId));
 
+        Planet response = planetRepository.findById(existsId).get();
+
+        assertEquals(planet, response);
         verify(planetRepository, times(1)).findById(existsId);
         verifyNoMoreInteractions(planetRepository);
     }
@@ -131,6 +136,7 @@ public class PlanetServiceTest {
     @Test(expected = PlanetNotFoundException.class)
     public void testFindByIdException() {
         when(planetRepository.findById(notExistsId)).thenThrow(PlanetNotFoundException.class);
+
         planetService.findById(notExistsId);
 
         verify(planetRepository, times(1)).findById(notExistsId);
@@ -142,7 +148,9 @@ public class PlanetServiceTest {
         when(planetRepository.findById(existsId)).thenReturn(Optional.of(planet));
         when(planetRepository.save(updatePlanet)).thenReturn(updatePlanet);
 
-        assertEquals(updatePlanet, planetService.update(existsId, updatePlanet));
+        Planet response = planetService.update(existsId, updatePlanet);
+
+        assertEquals(updatePlanet, response);
         verify(planetRepository, times(1)).findById(existsId);
         verify(planetRepository, times(1)).save(updatePlanet);
         verifyNoMoreInteractions(planetRepository);
@@ -159,43 +167,30 @@ public class PlanetServiceTest {
 
     @Test
     public void testDeleteSuccess() {
-        when(planetRepository.findById(existsId)).thenReturn(Optional.of(planet));
+        Mockito.doNothing().when(planetRepository).deleteById(existsId);
         planetService.deleteById(existsId);
 
-        verify(planetRepository, times(1)).findById(existsId);
         verify(planetRepository, times(1)).deleteById(existsId);
         verifyNoMoreInteractions(planetRepository);
     }
 
-//    @Test(expected = PlanetNotFoundException.class)
-//    public void testDeleteException() {
-//        when(planetRepository.findById(notExistsId)).thenThrow(PlanetNotFoundException.class);
-//        planetService.deleteById(notExistsId);
-//
-//        verify(planetRepository, times(1)).findById(notExistsId);
-//        verify(planetRepository, times(1)).deleteById(notExistsId);
-//        verifyNoMoreInteractions(planetRepository);
-//    }
+    @Test(expected = PlanetNotFoundException.class)
+    public void testDeleteException() {
+        doThrow(new PlanetNotFoundException()).when(planetRepository).deleteById(notExistsId);
+        planetService.deleteById(notExistsId);
+
+        verify(planetRepository, times(1)).deleteById(notExistsId);
+        verifyNoMoreInteractions(planetRepository);
+    }
 
     @Test
     public void testFindAllFilteredByNameSuccess() {
         when(planetRepository.findAllFilteredByName(pageable, planetNameExists)).thenReturn(planetPage);
 
-        assertEquals(1, planetService.findAllFilteredByName(pageable.getPageSize(), pageable.getPageNumber(), planetNameExists).size());
+        List<Planet> result = planetService.findAllFilteredByName(pageable.getPageSize(), pageable.getPageNumber(), planetNameExists);
+
+        assertEquals(planets, result);
         verify(planetRepository, times(1)).findAllFilteredByName(pageable, planetNameExists);
         verifyNoMoreInteractions(planetRepository);
     }
-
-    @Test
-    public void findAllSortedBySatellites() {
-//        when(planetRepository.findAllSortedBySatelliteNumber(pageable)).thenReturn(planetsSortedBySatDTOPage);
-//        when(planetRepository.findAll()).thenReturn(planets);
-//
-//        assertEquals(planets, planetService.findAllSortedBySatellites(pageable.getPageSize(), pageable.getPageNumber(), "ASC"));
-//
-//        verify(planetRepository, times(1)).findAllSortedBySatelliteNumber(pageable);
-//        verify(planetRepository, times(1)).findAll();
-//        verifyNoMoreInteractions(planetRepository);
-    }
-
 }

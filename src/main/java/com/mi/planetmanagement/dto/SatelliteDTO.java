@@ -1,13 +1,10 @@
 package com.mi.planetmanagement.dto;
 
-import com.mi.planetmanagement.model.Planet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -15,10 +12,18 @@ import javax.persistence.ManyToOne;
 public class SatelliteDTO {
 
     private Long id;
+
+    @NotNull(message = "name must not be null!")
     private String name;
+
+    @NotNull(message = "surface_area must not be null!")
     private Long surfaceArea;
+
+    @NotNull(message = "mass must not be null!")
     private Long mass;
+
     private Boolean naturalSatellite;
+
     private Long planetId;
 
 }

@@ -80,7 +80,7 @@
       146210000,
       7342100,
       true,
-      1
+      3
   );
 
   INSERT INTO satellite (
@@ -94,7 +94,7 @@
       1,
       84,
       false,
-      1
+      3
   );
 
   INSERT INTO satellite (
@@ -108,7 +108,7 @@
       1,
       40,
       false,
-      1
+      3
   );
 
   INSERT INTO satellite (
@@ -122,7 +122,7 @@
       1,
       21,
       false,
-      1
+      3
   );
 
   INSERT INTO satellite (

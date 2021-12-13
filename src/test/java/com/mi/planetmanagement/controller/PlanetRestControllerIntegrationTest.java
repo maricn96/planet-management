@@ -103,7 +103,7 @@ public class PlanetRestControllerIntegrationTest {
     }
 
     @Test
-    public void testFindAllFilteredByNameSuccess() throws Exception {
+    public void testFindAllFilteredByName() throws Exception {
         MvcResult result = mockMvc.perform(post("/api/planet/findAllFilteredByName")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectWriter.writeValueAsBytes(planetPageFilterRequestDTO)))

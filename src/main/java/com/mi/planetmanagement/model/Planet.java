@@ -22,18 +22,18 @@ public class Planet {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "surface_area", nullable = false)
+    @Column(nullable = false)
     private Long surfaceArea;
 
     @Column(nullable = false)
     private Long mass;
 
-    @Column(name = "distanceFromSun", nullable = false)
+    @Column(nullable = false)
     private Long distanceFromSun;
 
-    @Column(name = "average_surface_temperature")
+    @Column()
     private Integer averageSurfaceTemperature;
 
-    @OneToMany(mappedBy = "planet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "planet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Satellite> satellites;
 }

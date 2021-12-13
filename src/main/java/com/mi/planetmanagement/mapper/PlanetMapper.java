@@ -13,7 +13,9 @@ public interface PlanetMapper {
     @Mapping(target = "satelliteDTOList", source = "satellites")
     PlanetDTO toDTO(Planet planet);
 
+    @Mapping(target = "satellites", source = "satelliteDTOList")
     Planet toEntity(PlanetDTO planetDTO);
+
     List<PlanetDTO> toListDTO(List<Planet> planetList);
 
 }

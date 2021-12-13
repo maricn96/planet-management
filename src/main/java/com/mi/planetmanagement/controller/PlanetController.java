@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -36,17 +37,14 @@ public class PlanetController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody PlanetDTO dto) {
+    public ResponseEntity<String> save(@RequestBody @Valid PlanetDTO dto) {
         planetService.save(planetMapper.toEntity(dto));
         return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PlanetDTO> update(@PathVariable Long id, @RequestBody PlanetDTO dto) {
+    public ResponseEntity<PlanetDTO> update(@PathVariable Long id, @RequestBody @Valid PlanetDTO dto) {
         Planet ret = planetService.update(id, planetMapper.toEntity(dto));
-//        if(ret == null)
-//            throw new PlanetNotFoundException("No planet with id " + id + " found!");
-//        else
         return new ResponseEntity<PlanetDTO>(planetMapper.toDTO(ret), HttpStatus.OK);
     }
 

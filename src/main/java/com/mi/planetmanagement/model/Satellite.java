@@ -21,13 +21,12 @@ public class Satellite {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "surface_area", nullable = false)
+    @Column(nullable = false)
     private Long surfaceArea;
 
     @Column(nullable = false)
     private Long mass;
 
-    @Column(name = "natural_satellite")
     private Boolean naturalSatellite;
 
     @ManyToOne

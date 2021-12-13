@@ -1,7 +1,6 @@
 package com.mi.planetmanagement.controller;
 
 import com.mi.planetmanagement.dto.SatelliteDTO;
-import com.mi.planetmanagement.exceptions.SatelliteNotFoundException;
 import com.mi.planetmanagement.mapper.SatelliteMapper;
 import com.mi.planetmanagement.model.Satellite;
 import com.mi.planetmanagement.service.SatelliteService;
@@ -10,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,18 +35,15 @@ public class SatelliteController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody SatelliteDTO dto) {
+    public ResponseEntity<String> save(@RequestBody @Valid SatelliteDTO dto) {
         satelliteService.save(satelliteMapper.toEntity(dto));
         return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SatelliteDTO> update(@PathVariable Long id, @RequestBody SatelliteDTO dto) {
+    public ResponseEntity<SatelliteDTO> update(@PathVariable Long id, @RequestBody @Valid SatelliteDTO dto) {
         Satellite ret = satelliteService.update(id, satelliteMapper.toEntity(dto));
-        if(ret == null)
-            throw new SatelliteNotFoundException("No satellite with id " + id + " found!");
-        else
-            return new ResponseEntity<SatelliteDTO>(satelliteMapper.toDTO(ret), HttpStatus.OK);
+        return new ResponseEntity<SatelliteDTO>(satelliteMapper.toDTO(ret), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
