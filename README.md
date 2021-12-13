@@ -2,10 +2,15 @@
 Simple CRUD operations API
 
 Technologies:
+
     java - 11
+    
     spring - 2.6.1
+    
     postgresql - 13.5
+    
     hibernate - 5.6.1
+    
     maven - 3.8.4
 
 How to run application:
