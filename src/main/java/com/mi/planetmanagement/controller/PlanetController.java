@@ -39,7 +39,7 @@ public class PlanetController {
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid PlanetDTO dto) {
         planetService.save(planetMapper.toEntity(dto));
-        return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
+        return new ResponseEntity<String>("CREATED", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

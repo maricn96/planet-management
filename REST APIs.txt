@@ -1,0 +1,121 @@
+1. Create Planet:
+
+POST http://localhost:8200/api/planet
+
+{
+    "name": "Uranus",
+    "surfaceArea": 10100000,
+    "mass": 16321900000,
+    "distanceFromSun": 7600000098,
+    "averageSurfaceTemperature": 1
+}
+
+
+
+
+2. View one planet data along with satellites data
+
+GET http://localhost:8200/api/planet/3
+
+
+
+
+3. List of all planets with paging and filter by planet name
+
+POST http://localhost:8200/api/planet/findAllFilteredByName
+
+{
+    "pagingRequestDTO": {
+        "perPage": 5,
+        "pageNumber": 0
+    },
+    "filterPlanetName": "Jupiter"
+}
+
+
+
+
+4. List of all planets with paging and sorted by number of satellites
+
+POST http://localhost:8200/api/planet/findAllSortedBySatellites
+
+{
+    "pagingRequestDTO": {
+        "perPage": 5,
+        "pageNumber": 0
+    },
+    "direction": "DESC"
+}
+
+
+
+
+5. Update planet data
+
+PUT http://localhost:8200/api/planet/1
+
+{
+    "name": "Mercury",
+    "surfaceArea": 146210000,
+    "mass": 7342100,
+    "distanceFromSun": 42134123,
+    "averageSurfaceTemperature": 200
+}
+
+
+
+
+6. Delete planet
+
+DELETE http://localhost:8200/api/planet/3
+
+
+
+
+7. Create Satellite
+
+POST http://localhost:8200/api/satellite
+
+{
+    "name": "SPUTNIK-2",
+    "surfaceArea": 32,
+    "mass": 55,
+    "naturalSatellite": false,
+    "planetId": 2
+}
+
+
+
+
+8. List of all satellites of one planet
+
+GET http://localhost:8200/api/satellite/findAllByPlanetId/2
+
+
+
+
+9. View of one satellite
+
+GET http://localhost:8200/api/satellite/5
+
+
+
+
+10. Update satellite data
+
+PUT http://localhost:8200/api/satellite/5
+
+{
+    "name": "SPUTNIK-4",
+    "surfaceArea": 12,
+    "mass": 25,
+    "naturalSatellite": false,
+    "planetId": 2
+}
+
+
+
+
+11. Delete satellite
+
+DELETE http://localhost:8200/api/satellite/5

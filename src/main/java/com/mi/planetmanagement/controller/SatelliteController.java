@@ -37,7 +37,7 @@ public class SatelliteController {
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid SatelliteDTO dto) {
         satelliteService.save(satelliteMapper.toEntity(dto));
-        return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
+        return new ResponseEntity<String>("CREATED", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
