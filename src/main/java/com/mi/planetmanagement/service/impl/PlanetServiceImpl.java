@@ -4,7 +4,6 @@ import com.mi.planetmanagement.dto.PlanetsSortedBySatDTO;
 import com.mi.planetmanagement.exceptions.PlanetNotFoundException;
 import com.mi.planetmanagement.model.Planet;
 import com.mi.planetmanagement.repository.PlanetRepository;
-import com.mi.planetmanagement.repository.SatelliteRepository;
 import com.mi.planetmanagement.service.PlanetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,9 +21,6 @@ public class PlanetServiceImpl implements PlanetService {
 
     @Autowired
     private PlanetRepository planetRepository;
-
-    @Autowired
-    private SatelliteRepository satelliteRepository;
 
     private final String exceptionMessage = "Could not find planet with id: ";
 

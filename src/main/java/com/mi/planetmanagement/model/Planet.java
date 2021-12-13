@@ -34,6 +34,6 @@ public class Planet {
     @Column(name = "average_surface_temperature")
     private Integer averageSurfaceTemperature;
 
-    @OneToMany(mappedBy = "planet")
+    @OneToMany(mappedBy = "planet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Satellite> satellites;
 }

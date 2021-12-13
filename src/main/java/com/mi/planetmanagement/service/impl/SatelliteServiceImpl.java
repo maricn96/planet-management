@@ -1,6 +1,5 @@
 package com.mi.planetmanagement.service.impl;
 
-import com.mi.planetmanagement.mapper.SatelliteMapper;
 import com.mi.planetmanagement.model.Satellite;
 import com.mi.planetmanagement.repository.SatelliteRepository;
 import com.mi.planetmanagement.service.SatelliteService;
@@ -14,10 +13,6 @@ public class SatelliteServiceImpl implements SatelliteService {
 
     @Autowired
     private SatelliteRepository satelliteRepository;
-
-    @Autowired
-    private SatelliteMapper satelliteMapper;
-
 
     @Override
     public List<Satellite> findAll() {

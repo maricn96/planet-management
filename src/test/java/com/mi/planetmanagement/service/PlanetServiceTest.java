@@ -102,9 +102,11 @@ public class PlanetServiceTest {
     @Test
     public void testFindAllSuccess() {
         when(planetRepository.findAll()).thenReturn(planets);
+        List<Planet> response = planetService.findAll();
+
         assertEquals(planets, planetService.findAll());
 
-        verify(planetRepository, times(1)).findAll();
+        verify(planetRepository, times(2)).findAll();
         verifyNoMoreInteractions(planetRepository);
     }
 
